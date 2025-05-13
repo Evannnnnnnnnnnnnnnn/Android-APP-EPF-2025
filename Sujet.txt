@@ -1,0 +1,40 @@
+Lien : http://vps449928.ovh.net/tp-android/blog/android-projet-2025/
+
+
+TP : Android / Kotlin
+Projet
+Sujet
+
+Votre objectif est de réaliser une application mobile de e-commerce sur la plate-forme Android à l’aide du langage Kotlin.
+
+Cette application doit permettre à son utilisateur de :
+
+    Rechercher un article via une chaine de caractère (le resultat de la recherche affiche une liste d’article),
+    Afficher la fiche d’un article,
+    Scanner un QRCode (qui contient l’identifiant d’un article) et visualiser la fiche de l’article correspondant,
+    Mettre un article dans le panier,
+    Afficher le panier.
+
+Les données concernant les articles et la gestion d’un panier sont accessibles via l’API Rest suivante :
+
+https://fakestoreapi.com/
+Contraintes
+
+    Vous devez réaliser ce projet seul(e) ou en binôme.
+    Vous devez fournir le code source de l’application et une documentation utilisateur.
+
+Notation
+
+    10 points pour la réalisation des contraintes définies précédemment,
+    5 points pour l’expérience utilisateur,
+    5 points pour des fonctionnalités inventées.
+
+Liens utiles
+
+    Android Developers : https://developer.android.com
+    QRCode (bibliothèque Android): https://github.com/dm77/barcodescanner
+    QRCode (générateur) : https://fr.qr-code-generator.com/
+    Retrofit : https://square.github.io/retrofit/
+    Glide : https://bumptech.github.io/glide
+
+© 2021 Cyril Dumont.
