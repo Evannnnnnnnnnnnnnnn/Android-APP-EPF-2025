@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">e-commerce_PD</string>
+    <string name="product_image_description">Image du produit</string>
 </resources>
