@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.example.projetandroiddorspasteau.model.Product
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.widget.NumberPicker
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -109,11 +110,35 @@ class Product_detail : AppCompatActivity() {
             .setPositiveButton("Ajouter") { _, _ ->
                 val quantity = numberPicker.value
                 CartManager.addItem(product, quantity, this)
-                // Le message Toast est maintenant géré par CartManager après la synchro
+                showAddedToCartDialog(product.title)
             }
             .setNegativeButton("Annuler", null)
             .show()
     }
+
+
+    private fun showAddedToCartDialog(productName: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Produit Ajouté !")
+            .setMessage("$productName a été ajouté à votre panier.")
+            .setPositiveButton("Voir le Panier") { _, _ ->
+                // Lancer CartActivity
+                val intent = Intent(this, CartActivity::class.java)
+                // Optionnel : si tu veux que CartActivity se comporte d'une certaine manière
+                // en venant d'ici, tu peux ajouter des extras.
+                // Par exemple, pour éviter de relancer MainActivity si on fait "retour" depuis le panier :
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                // Optionnel: fermer Product_detail après être allé au panier
+                // finish()
+            }
+            .setNegativeButton("Continuer les achats") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false) // Empêche de fermer le dialogue en cliquant à l'extérieur
+            .show()
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
