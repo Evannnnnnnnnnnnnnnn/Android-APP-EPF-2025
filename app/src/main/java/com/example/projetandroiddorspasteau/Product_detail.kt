@@ -15,6 +15,9 @@ import com.example.projetandroiddorspasteau.model.Product
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.NumberPicker
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
@@ -95,25 +98,38 @@ class Product_detail : AppCompatActivity() {
         }
     }
     private fun showQuantityDialog(product: Product) {
-        val numberPicker = NumberPicker(this).apply {
-            minValue = 1
-            maxValue = 10 // Limite max pour la quantité
-            wrapSelectorWheel = false
-            // Mettre la valeur actuelle si le produit est déjà dans le panier
-            val existingItem = CartManager.getCartItems().find { it.product.id == product.id }
-            value = existingItem?.quantity ?: 1
-        }
+        // Gonfler le layout personnalisé pour le dialogue
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_quantity, null)
+        val numberPicker: NumberPicker = dialogView.findViewById(R.id.custom_dialog_number_picker)
+        // val dialogTitleTextView: TextView = dialogView.findViewById(R.id.dialog_title_custom) // Si tu gères le titre via XML
 
-        AlertDialog.Builder(this)
-            .setTitle("Choisir la quantité")
-            .setView(numberPicker)
+        // Configuration du NumberPicker
+        numberPicker.minValue = 0
+        numberPicker.maxValue = 10
+        numberPicker.wrapSelectorWheel = false
+        val existingItem = CartManager.getCartItems().find { it.product.id == product.id }
+        numberPicker.value = existingItem?.quantity ?: 1
+
+        // Construire le dialogue
+        val alertDialog = AlertDialog.Builder(this)
+            // .setTitle("Choisir la quantité") // le titre est dans ton XML
+            .setView(dialogView)
             .setPositiveButton("Ajouter") { _, _ ->
                 val quantity = numberPicker.value
                 CartManager.addItem(product, quantity, this)
                 showAddedToCartDialog(product.title)
             }
             .setNegativeButton("Annuler", null)
-            .show()
+            .create() // Crée le dialogue mais ne l'affiche pas encore
+
+        alertDialog.show()
+
+        val window = alertDialog.window
+        val displayMetrics = resources.displayMetrics
+        val dialogWidth = (displayMetrics.widthPixels * 0.7).toInt() // 70% de la largeur de l'écran
+        window?.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT)
+        window?.setGravity(Gravity.CENTER) // Assurer qu'il soit centré
+
     }
 
 

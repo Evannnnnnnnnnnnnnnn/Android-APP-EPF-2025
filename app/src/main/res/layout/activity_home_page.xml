@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <TextView
                 android:id="@+id/toolbar_title_centered"
@@ -39,7 +40,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:listitem="@layout/item_product"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" /> <!-- IMPORTANT pour le scroll avec AppBarLayout -->
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     <ProgressBar

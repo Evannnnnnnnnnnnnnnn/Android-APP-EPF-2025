@@ -1,7 +1,6 @@
 package com.example.projetandroiddorspasteau // Ton package
 
 import android.Manifest // Pour la demande de permission CAMERA
-import android.app.Activity // Pour Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeActivityLaunchers() {
         // Initialiser le launcher pour le résultat du scan
         scanActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 val data: Intent? = result.data
                 val scannedIdString = data?.getStringExtra(ScanActivity.SCANNED_PRODUCT_ID)
                 if (!scannedIdString.isNullOrBlank()) {
@@ -91,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 Log.d("MainActivity", "Scan cancelled or failed.")
-                // Optionnel: Toast.makeText(this, "Scan annulé", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(this, "Scan annulé", Toast.LENGTH_SHORT).show()
             }
         }
 
