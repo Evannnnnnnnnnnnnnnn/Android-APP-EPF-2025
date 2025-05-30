@@ -53,10 +53,10 @@ class ScanActivity : AppCompatActivity() {
         val integrator = IntentIntegrator(this)
         @Suppress("DEPRECATION")
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE) // Scanner uniquement les QRCodes
-        integrator.setPrompt("Scannez un QRCode produit") // Message affiché à l'utilisateur
+        integrator.setPrompt("Scannez un QRCode produit") // Message affiché à l'utilisateur        
         integrator.setCameraId(0)  // Utiliser la caméra arrière
         integrator.setBarcodeImageEnabled(false) // Ne pas sauvegarder l'image du code-barres
-        integrator.setOrientationLocked(true) // Permettre la rotation
+        integrator.setOrientationLocked(false) // Permettre au scanner de suivre l'orientation de l'écran
         // Lancer l'activité de scan fournie par la bibliothèque
         barcodeLauncher.launch(integrator.createScanIntent())
     }

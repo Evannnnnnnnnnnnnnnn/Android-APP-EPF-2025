@@ -207,9 +207,10 @@ object CartManager {
         if (localCartItems.isEmpty()) {
             if (serverCartId != null) {
                 deleteCartFromServer(context, successMessage.ifBlank { "Panier vidé sur le serveur." })
-            } else {
-                if (successMessage.isNotBlank()) Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
             }
+//            else {
+//                if (successMessage.isNotBlank()) //Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+//                }
             return
         }
 
@@ -233,8 +234,9 @@ object CartManager {
                             serverCartId = syncedCart.id
                         }
                         Log.d(TAG, "Cart synced with server. New/Updated Cart ID: $serverCartId")
-                        if (successMessage.isNotBlank()) Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
-                    } else {
+//                        if (successMessage.isNotBlank()) //Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    else {
                         Log.e(TAG, "Error syncing cart: ${response.code()} - ${response.message()}")
                         Toast.makeText(context, "Erreur de synchronisation du panier.", Toast.LENGTH_SHORT).show()
                     }
