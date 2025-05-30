@@ -4,6 +4,7 @@ import com.example.projetandroiddorspasteau.model.ApiCart
 import com.example.projetandroiddorspasteau.model.Product
 import retrofit2.Response
 import retrofit2.http.*
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("products")
@@ -24,4 +25,7 @@ interface ApiService {
 
     @DELETE("carts/{cartId}")
     suspend fun deleteCart(@Path("cartId") cartId: Int): Response<Void> // Ou Response<ApiCart> si l'API le retourne
+
+    @GET("products/{id}")
+    suspend fun getProductById(@Path("id") productId: Int): Response<Product>
 }

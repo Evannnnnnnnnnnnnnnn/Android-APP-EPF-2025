@@ -1,5 +1,7 @@
 package com.example.projetandroiddorspasteau // Ton package
 
+import android.Manifest // Pour la demande de permission CAMERA
+import android.app.Activity // Pour Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,8 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -30,6 +34,10 @@ class MainActivity : AppCompatActivity() {
     private var currentCategories: List<String> = emptyList()
     private var currentSelectedCategory: String? = null
 
+    // Launchers pour le scan QRCode et la permission caméra
+    private lateinit var scanActivityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page) //  Nom de ton layout principal
@@ -41,29 +49,62 @@ class MainActivity : AppCompatActivity() {
         productsRecyclerView = findViewById(R.id.products_recycler_view)
         progressBar = findViewById(R.id.progress_bar)
 
+        // Initialiser les launchers dans onCreate
+        initializeActivityLaunchers()
+
         // Charger le panier depuis DataStore AVANT de faire d'autres opérations
-        // qui pourraient dépendre de l'état du panier.
         lifecycleScope.launch {
             Log.d("MainActivity", "onCreate: Launching coroutine to load cart and fetch data.")
-            CartManager.loadCartFromDataStore(applicationContext) // Charger le panier en premier
+            CartManager.loadCartFromDataStore(applicationContext)
 
-            // Maintenant que le panier est potentiellement chargé (ou vide si première fois),
-            // on peut initialiser le reste.
             setupRecyclerView()
-            fetchProducts() // Par défaut, charge tous les produits
+            fetchProducts()
             fetchCategories()
-
-            // Essayer de récupérer l'ID du panier serveur.
-            // Ceci est plus pour la synchro future et n'affecte pas directement le contenu local du panier
-            // qui vient d'être chargé depuis DataStore.
             CartManager.fetchCartFromServer(applicationContext)
             Log.d("MainActivity", "onCreate: Coroutine finished loading cart and fetching initial data.")
         }
     }
 
+    private fun initializeActivityLaunchers() {
+        // Initialiser le launcher pour le résultat du scan
+        scanActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val scannedIdString = data?.getStringExtra(ScanActivity.SCANNED_PRODUCT_ID)
+                if (!scannedIdString.isNullOrBlank()) {
+                    try {
+                        val productId = scannedIdString.toInt()
+                        Log.d("MainActivity", "Product ID from QR Code: $productId")
+                        fetchAndShowProductById(productId)
+                    } catch (e: NumberFormatException) {
+                        Log.e("MainActivity", "Invalid product ID from QR Code: $scannedIdString", e)
+                        Toast.makeText(this, "Format d'ID de produit invalide", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Log.d("MainActivity", "No product ID returned from scan.")
+                }
+            } else {
+                Log.d("MainActivity", "Scan cancelled or failed.")
+                // Optionnel: Toast.makeText(this, "Scan annulé", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Initialiser le launcher pour la demande de permission CAMERA
+        requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Log.d("MainActivity", "Camera permission granted.")
+                launchScanner()
+            } else {
+                Log.w("MainActivity", "Camera permission denied.")
+                Toast.makeText(this, "Permission caméra requise pour scanner les QRCodes", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
     private fun setupRecyclerView() {
         productAdapter = ProductAdapter(emptyList()) { product ->
-            val intent = Intent(this, Product_detail::class.java) // Assure-toi que Product_detail est le bon nom de classe
+            val intent = Intent(this, Product_detail::class.java)
             intent.putExtra(Product_detail.EXTRA_PRODUCT, product)
             startActivity(intent)
         }
@@ -80,7 +121,6 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     response.body()?.let { products ->
                         allProducts = products
-                        // Le filtrage se fait ici basé sur le paramètre OU la catégorie sélectionnée globalement
                         filterAndDisplayProducts(categoryToFilter ?: currentSelectedCategory)
                     }
                 } else {
@@ -104,7 +144,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterAndDisplayProducts(category: String?) {
-        currentSelectedCategory = category // Mettre à jour la catégorie sélectionnée globalement
+        currentSelectedCategory = category
         Log.d("MainActivity", "Filtering for category: $category")
 
         val productsToDisplay = if (category == null) {
@@ -160,7 +200,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
                     filterAndDisplayProducts(currentSelectedCategory)
-                } else if (newText.length > 1) { // Recherche à partir de 2 caractères
+                } else if (newText.length > 1) {
                     performSearch(newText)
                 }
                 return true
@@ -214,8 +254,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.action_qrcode -> {
-                Toast.makeText(this, "QRCode cliqué", Toast.LENGTH_SHORT).show()
-                // TODO: Implémenter la logique de scan QRCode
+                // Demander la permission caméra avant de lancer le scanner
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                 true
             }
 
@@ -244,16 +284,51 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (menuItem.itemId == -1) {
-                filterAndDisplayProducts(null) // Afficher tous les produits
+                filterAndDisplayProducts(null)
                 Toast.makeText(this, "Affichage de toutes les catégories", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 val selectedCat = currentCategories[menuItem.itemId]
-                filterAndDisplayProducts(selectedCat) // Afficher la catégorie sélectionnée
+                filterAndDisplayProducts(selectedCat)
                 Toast.makeText(this, "Catégorie: $selectedCat", Toast.LENGTH_SHORT).show()
             }
             true
         }
         popupMenu.show()
+    }
+
+    // Nouvelle méthode pour lancer le scanner
+    private fun launchScanner() {
+        val intent = Intent(this, ScanActivity::class.java)
+        scanActivityResultLauncher.launch(intent)
+    }
+
+    // Nouvelle méthode pour récupérer et afficher un produit par ID
+    private fun fetchAndShowProductById(productId: Int) {
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+                Log.d("MainActivity", "Fetching product details for ID: $productId")
+                val response = RetrofitInstance.api.getProductById(productId) // Assure-toi que cette méthode existe dans ApiService
+                if (response.isSuccessful) {
+                    response.body()?.let { product ->
+                        val intent = Intent(this@MainActivity, Product_detail::class.java)
+                        intent.putExtra(Product_detail.EXTRA_PRODUCT, product)
+                        startActivity(intent)
+                    } ?: run {
+                        Log.w("MainActivity", "Product with ID $productId not found or empty response body.")
+                        Toast.makeText(this@MainActivity, "Produit non trouvé (ID: $productId)", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Log.e("MainActivity", "Error fetching product by ID $productId: ${response.code()} - ${response.message()}")
+                    Toast.makeText(this@MainActivity, "Erreur de chargement du produit (ID: $productId)", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Exception fetching product by ID $productId", e)
+                Toast.makeText(this@MainActivity, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 }

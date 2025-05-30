@@ -51,14 +51,14 @@
     app:layout_constraintEnd_toEndOf="parent"
     tools:visibility="visible">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/empty_cart_image"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:src="@drawable/dog_crying"
-    android:scaleType="fitCenter"
-    android:contentDescription="Panier vide"
-    android:layout_marginBottom="8dp"/>
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/empty_cart_image"
+            android:layout_width="321dp"
+            android:layout_height="261dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Panier vide"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dog_crying" />
 
     <TextView
         android:id="@+id/empty_cart_text_view"
