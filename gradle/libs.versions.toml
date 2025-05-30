@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+androidGifDrawable = "1.2.29"
 androidxCoreKtx = "1.16.0"
 appcompatVersion = "1.6.1"
 cardview = "1.0.0"
@@ -7,6 +8,7 @@ composeBom = "2025.05.01"
 constraintlayoutVersion = "2.1.4"
 converterGson = "2.9.0"
 coreKtxVersion = "1.12.0"
+datastorePreferences = "1.1.7"
 glide = "4.16.0"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -25,6 +27,7 @@ recyclerview = "1.4.0"
 retrofit = "2.9.0"
 
 [libraries]
+android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 androidx-appcompat-v161 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
@@ -33,6 +36,7 @@ androidx-constraintlayout-v214 = { module = "androidx.constraintlayout:constrain
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-ktx-v1120 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
 androidx-core-ktx-v1160 = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }

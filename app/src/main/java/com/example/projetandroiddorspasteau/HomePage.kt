@@ -12,53 +12,59 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.lifecycleScope // Assure-toi que cet import est bien là
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projetandroiddorspasteau.model.Product
-import kotlinx.coroutines.launch
+import com.example.projetandroiddorspasteau.model.Product // Assure-toi que le chemin est correct
+import kotlinx.coroutines.launch // Assure-toi que cet import est bien là
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
-
-    // private lateinit var welcomeText: TextView // On ne les utilise plus directement pour l'instant
-    // private lateinit var selectedCategoryText: TextView
     private lateinit var productsRecyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
     private lateinit var progressBar: ProgressBar
 
-    private var allProducts: List<Product> = emptyList() // Garder une copie de tous les produits
+    private var allProducts: List<Product> = emptyList()
     private var currentCategories: List<String> = emptyList()
     private var currentSelectedCategory: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // S'assurer que le thème NoActionBar est appliqué si tu l'as fait dans le Manifest
-        // (Normalement, c'est déjà géré par le Manifest)
-        setContentView(R.layout.activity_home_page)
+        setContentView(R.layout.activity_home_page) //  Nom de ton layout principal
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "PasteauDors"
 
-        // welcomeText = findViewById(R.id.welcome_text)
-        // selectedCategoryText = findViewById(R.id.selected_category_text)
         productsRecyclerView = findViewById(R.id.products_recycler_view)
         progressBar = findViewById(R.id.progress_bar)
 
-        setupRecyclerView()
-        fetchProducts()
-        fetchCategories()
-        CartManager.fetchCartFromServer(this)
+        // Charger le panier depuis DataStore AVANT de faire d'autres opérations
+        // qui pourraient dépendre de l'état du panier.
+        lifecycleScope.launch {
+            Log.d("MainActivity", "onCreate: Launching coroutine to load cart and fetch data.")
+            CartManager.loadCartFromDataStore(applicationContext) // Charger le panier en premier
+
+            // Maintenant que le panier est potentiellement chargé (ou vide si première fois),
+            // on peut initialiser le reste.
+            setupRecyclerView()
+            fetchProducts() // Par défaut, charge tous les produits
+            fetchCategories()
+
+            // Essayer de récupérer l'ID du panier serveur.
+            // Ceci est plus pour la synchro future et n'affecte pas directement le contenu local du panier
+            // qui vient d'être chargé depuis DataStore.
+            CartManager.fetchCartFromServer(applicationContext)
+            Log.d("MainActivity", "onCreate: Coroutine finished loading cart and fetching initial data.")
+        }
     }
 
     private fun setupRecyclerView() {
         productAdapter = ProductAdapter(emptyList()) { product ->
-            // Gérer le clic sur un produit
-            val intent = Intent(this, Product_detail::class.java)
-            intent.putExtra(Product_detail.EXTRA_PRODUCT, product) // Passe l'objet Product
+            val intent = Intent(this, Product_detail::class.java) // Assure-toi que Product_detail est le bon nom de classe
+            intent.putExtra(Product_detail.EXTRA_PRODUCT, product)
             startActivity(intent)
         }
         productsRecyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -67,13 +73,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchProducts(categoryToFilter: String? = null) {
         progressBar.visibility = View.VISIBLE
+        Log.d("MainActivity", "fetchProducts called with category: $categoryToFilter")
         lifecycleScope.launch {
             try {
                 val response = RetrofitInstance.api.getAllProducts()
                 if (response.isSuccessful) {
                     response.body()?.let { products ->
                         allProducts = products
-                        filterAndDisplayProducts(categoryToFilter)
+                        // Le filtrage se fait ici basé sur le paramètre OU la catégorie sélectionnée globalement
+                        filterAndDisplayProducts(categoryToFilter ?: currentSelectedCategory)
                     }
                 } else {
                     Toast.makeText(
@@ -96,10 +104,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterAndDisplayProducts(category: String?) {
-        // Si la recherche est active (le SearchView a du texte), on ne doit pas tout écraser
-        // SAUF si la catégorie est changée explicitement.
-        // Pour simplifier, quand on change de catégorie, on annule la recherche textuelle.
-        currentSelectedCategory = category
+        currentSelectedCategory = category // Mettre à jour la catégorie sélectionnée globalement
         Log.d("MainActivity", "Filtering for category: $category")
 
         val productsToDisplay = if (category == null) {
@@ -108,7 +113,6 @@ class MainActivity : AppCompatActivity() {
             allProducts.filter { it.category.equals(category, ignoreCase = true) }
         }
         productAdapter.updateProducts(productsToDisplay)
-        // updateSelectedCategoryUIText() // Si tu as un TextView pour afficher la catégorie
     }
 
 
@@ -119,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     response.body()?.let { categories ->
                         currentCategories =
-                            categories.map { it.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() } } // Capitalize
+                            categories.map { it.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() } }
                     }
                 } else {
                     Log.e(
@@ -139,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView =
-            searchItem.actionView as SearchView // Assure-toi que c'est androidx.appcompat.widget.SearchView
+            searchItem.actionView as SearchView
 
         searchView.queryHint = "Rechercher un article..."
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -150,33 +154,25 @@ class MainActivity : AppCompatActivity() {
                     filterAndDisplayProducts(currentSelectedCategory)
                 }
                 searchView.clearFocus()
-                // searchItem.collapseActionView() // Optionnel, certains préfèrent le laisser ouvert
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
-                    // Si le champ est vidé, on réaffiche les produits de la catégorie active (ou tous)
                     filterAndDisplayProducts(currentSelectedCategory)
-                }
-                // Si tu veux une recherche dynamique (à chaque lettre tapée):
-                 else if (newText.length > 1) { // exemple: recherche à partir de 3 caractères
+                } else if (newText.length > 1) { // Recherche à partir de 2 caractères
                     performSearch(newText)
-                 }
+                }
                 return true
             }
         })
 
-        // Gérer la fermeture du SearchView pour réinitialiser la liste si nécessaire
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                // Le SearchView est ouvert
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                // Le SearchView est fermé (ex: via la flèche retour du SearchView)
-                // Réinitialiser la liste à la catégorie actuelle ou tous les produits
                 filterAndDisplayProducts(currentSelectedCategory)
                 return true
             }
@@ -213,8 +209,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                // Toast.makeText(this, "Panier cliqué", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, CartActivity::class.java)) // LANCER CARTACTIVITY
+                startActivity(Intent(this, CartActivity::class.java))
                 true
             }
 
@@ -242,22 +237,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
-            // Avant de filtrer par catégorie, s'assurer que le SearchView est potentiellement réinitialisé si on veut
-            // Pour l'instant, la sélection d'une catégorie écrase la recherche textuelle en cours.
             val searchMenuItem = toolbar.menu.findItem(R.id.action_search)
             if (searchMenuItem != null && searchMenuItem.isActionViewExpanded) {
-                // Optionnel: vider le texte de recherche et/ou replier le SearchView
                 (searchMenuItem.actionView as SearchView).setQuery("", false)
                 searchMenuItem.collapseActionView()
             }
 
             if (menuItem.itemId == -1) {
-                filterAndDisplayProducts(null)
+                filterAndDisplayProducts(null) // Afficher tous les produits
                 Toast.makeText(this, "Affichage de toutes les catégories", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 val selectedCat = currentCategories[menuItem.itemId]
-                filterAndDisplayProducts(selectedCat)
+                filterAndDisplayProducts(selectedCat) // Afficher la catégorie sélectionnée
                 Toast.makeText(this, "Catégorie: $selectedCat", Toast.LENGTH_SHORT).show()
             }
             true
@@ -265,14 +257,3 @@ class MainActivity : AppCompatActivity() {
         popupMenu.show()
     }
 }
-
-
-// private fun updateSelectedCategoryUI() { // Si tu veux toujours l'afficher
-//     if (currentSelectedCategory != null) {
-//         selectedCategoryText.text = "Catégorie sélectionnée : $currentSelectedCategory"
-//         selectedCategoryText.visibility = View.VISIBLE
-//     } else {
-//         selectedCategoryText.text = "Toutes les catégories" // Ou cacher
-//         selectedCategoryText.visibility = View.VISIBLE // Ou GONE
-//     }
-// }
