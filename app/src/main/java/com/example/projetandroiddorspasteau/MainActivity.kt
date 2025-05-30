@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projetandroiddorspasteau.model.Product // Assure-toi que le chemin est correct
 import kotlinx.coroutines.launch // Assure-toi que cet import est bien là
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,20 +38,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scanActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
 
+    private lateinit var cartFab: FloatingActionButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page) //  Nom de ton layout principal
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "PasteauDors"
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         productsRecyclerView = findViewById(R.id.products_recycler_view)
         progressBar = findViewById(R.id.progress_bar)
 
         // Initialiser les launchers dans onCreate
         initializeActivityLaunchers()
+        cartFab = findViewById(R.id.fab_cart) // Récupérer la référence du FAB
 
+        cartFab.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
         // Charger le panier depuis DataStore AVANT de faire d'autres opérations
         lifecycleScope.launch {
             Log.d("MainActivity", "onCreate: Launching coroutine to load cart and fetch data.")
@@ -248,10 +254,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_cart -> {
-                startActivity(Intent(this, CartActivity::class.java))
-                true
-            }
 
             R.id.action_qrcode -> {
                 // Demander la permission caméra avant de lancer le scanner
