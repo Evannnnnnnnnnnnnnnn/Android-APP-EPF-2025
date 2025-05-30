@@ -17,7 +17,6 @@ class CartActivity : AppCompatActivity() {
     private lateinit var toolbarCart: Toolbar
     private lateinit var cartRecyclerView: RecyclerView
     private lateinit var cartAdapter: CartAdapter
-    // private lateinit var emptyCartText: TextView // On n'utilise plus ce TextView seul
     private lateinit var emptyCartLayout: LinearLayout // Nouvelle référence au layout
     private lateinit var cartTotalPriceText: TextView
     private lateinit var checkoutButton: Button

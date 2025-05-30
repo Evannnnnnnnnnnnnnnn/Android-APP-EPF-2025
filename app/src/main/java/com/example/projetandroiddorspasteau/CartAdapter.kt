@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy // Import for cache strategy
+import com.example.projetandroiddorspasteau.WhiteToTransparentTransformation
 
 class CartAdapter(
     private var cartItems: List<CartItemDetail>,
@@ -51,8 +53,10 @@ class CartAdapter(
 
             Glide.with(itemView.context)
                 .load(cartItem.product.imageUrl)
+                .transform(WhiteToTransparentTransformation(tolerance = 15))
                 .placeholder(R.drawable.whysoserious)
                 .error(R.drawable.whysoserious)
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
                 .into(itemImage)
 
             decreaseQuantityButton.setOnClickListener {

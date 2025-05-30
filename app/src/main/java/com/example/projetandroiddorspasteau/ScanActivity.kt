@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.projetandroiddorspasteau
 
 import android.app.Activity
@@ -27,7 +29,7 @@ class ScanActivity : AppCompatActivity() {
             val intentResult: IntentResult? = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
             if (intentResult != null) {
                 if (intentResult.contents == null) {
-                    Toast.makeText(this, "Scan annulé", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, "Scan annulé", Toast.LENGTH_LONG).show()
                     finish()
                 } else {
                     val returnIntent = Intent()
@@ -47,7 +49,9 @@ class ScanActivity : AppCompatActivity() {
     }
 
     private fun startScan() {
+        @Suppress("DEPRECATION")
         val integrator = IntentIntegrator(this)
+        @Suppress("DEPRECATION")
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE) // Scanner uniquement les QRCodes
         integrator.setPrompt("Scannez un QRCode produit") // Message affiché à l'utilisateur
         integrator.setCameraId(0)  // Utiliser la caméra arrière

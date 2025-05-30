@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_page) //  Nom de ton layout principal
+        setContentView(R.layout.activity_home_page)  //  Nom du layout principal
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -287,12 +287,11 @@ class MainActivity : AppCompatActivity() {
 
             if (menuItem.itemId == -1) {
                 filterAndDisplayProducts(null)
-                Toast.makeText(this, "Affichage de toutes les catégories", Toast.LENGTH_SHORT)
-                    .show()
+                //Toast.makeText(this, "Affichage de toutes les catégories", Toast.LENGTH_SHORT).show()
             } else {
                 val selectedCat = currentCategories[menuItem.itemId]
                 filterAndDisplayProducts(selectedCat)
-                Toast.makeText(this, "Catégorie: $selectedCat", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Catégorie: $selectedCat", Toast.LENGTH_SHORT).show()
             }
             true
         }

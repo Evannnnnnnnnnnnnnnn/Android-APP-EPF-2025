@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.projetandroiddorspasteau.model.Product
 
 class ProductAdapter(
@@ -48,8 +49,10 @@ class ProductAdapter(
 
             Glide.with(itemView.context)
                 .load(product.imageUrl)
+                .transform(WhiteToTransparentTransformation(tolerance = 20))
                 .placeholder(R.drawable.whysoserious) // Optionnel: une image de placeholder
                 .error(R.drawable.whysoserious) // Optionnel: une image en cas d'erreur
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
                 .into(productImage)
         }
     }

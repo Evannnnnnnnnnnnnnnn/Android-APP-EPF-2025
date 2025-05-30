@@ -13,9 +13,9 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.example.projetandroiddorspasteau.model.Product
 import android.app.AlertDialog
+import android.os.Build
 import android.widget.NumberPicker
-
-// import com.google.android.material.appbar.CollapsingToolbarLayout // Supprimer cet import si présent
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class Product_detail : AppCompatActivity() {
 
@@ -24,7 +24,6 @@ class Product_detail : AppCompatActivity() {
     }
 
     private lateinit var toolbarDetail: Toolbar
-    // private lateinit var collapsingToolbarLayoutDetail: CollapsingToolbarLayout // Supprimer cette variable
     private lateinit var productDetailImage: ImageView
     private lateinit var productDetailTitle: TextView
     private lateinit var productDetailPrice: TextView
@@ -42,7 +41,6 @@ class Product_detail : AppCompatActivity() {
         toolbarDetail = findViewById(R.id.toolbar_detail)
         setSupportActionBar(toolbarDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        // collapsingToolbarLayoutDetail = findViewById(R.id.collapsing_toolbar_layout_detail) // Supprimer cette ligne
         // supportActionBar?.title = "" // On peut laisser ou mettre le titre par défaut si besoin
 
         productDetailImage = findViewById(R.id.product_detail_image)
@@ -55,7 +53,13 @@ class Product_detail : AppCompatActivity() {
         addToCartButton = findViewById(R.id.add_to_cart_button)
 
         val product =
-            intent.getParcelableExtra(EXTRA_PRODUCT, Product::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(EXTRA_PRODUCT, Product::class.java) // Version pour API >= 33 -> tel Seb (le riche là)
+            } else {
+                // Suppress deprecation warning for the older getParcelableExtra method
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<Product>(EXTRA_PRODUCT) // Version pour API < 33
+            }
 
         if (product != null) {
             displayProductDetails(product)
@@ -72,8 +76,10 @@ class Product_detail : AppCompatActivity() {
 
         Glide.with(this)
             .load(product.imageUrl)
+            .transform(WhiteToTransparentTransformation(tolerance = 15))
             .placeholder(R.drawable.whysoserious)
             .error(R.drawable.whysoserious)
+            .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
             .into(productDetailImage)
 
         productDetailTitle.text = product.title

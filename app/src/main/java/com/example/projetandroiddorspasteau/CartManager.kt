@@ -117,7 +117,7 @@ object CartManager {
         if (serverCartId != null) {
             deleteCartFromServer(context, "Panier vidé.")
         } else {
-            Toast.makeText(context, "Panier vidé.", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Panier vidé.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -180,7 +180,7 @@ object CartManager {
                             // Idéalement, ici on fusionnerait le panier serveur avec le panier local (DataStore).
                             // Pour l'instant, on garde le local comme prioritaire et on synchronisera
                             // l'état local vers le serveur.
-                            Toast.makeText(context, "Panier serveur (ID: $serverCartId) info récupérée.", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(context, "Panier serveur (ID: $serverCartId) info récupérée.", Toast.LENGTH_SHORT).show()
                         } else {
                             serverCartId = null
                             Log.d(TAG, "No cart found on server for user $USER_ID.")
