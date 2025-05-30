@@ -1,0 +1,77 @@
+package com.example.projetandroiddorspasteau
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+
+class CartAdapter(
+    private var cartItems: List<CartItemDetail>,
+    private val context: Context, // Pour CartManager
+    private val onQuantityChanged: (productId: Int, newQuantity: Int) -> Unit,
+    private val onItemRemoved: (productId: Int) -> Unit
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_cart_product, parent, false)
+        return CartViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+        val cartItem = cartItems[position]
+        holder.bind(cartItem)
+    }
+
+    override fun getItemCount(): Int = cartItems.size
+
+    fun updateCartItems(newCartItems: List<CartItemDetail>) {
+        this.cartItems = newCartItems
+        notifyDataSetChanged() // Pour une liste plus grande, utiliser DiffUtil
+    }
+
+    inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val itemImage: ImageView = itemView.findViewById(R.id.cart_item_image)
+        private val itemTitle: TextView = itemView.findViewById(R.id.cart_item_title)
+        private val itemPrice: TextView = itemView.findViewById(R.id.cart_item_price)
+        private val itemQuantityText: TextView = itemView.findViewById(R.id.cart_item_quantity_text)
+        private val decreaseQuantityButton: ImageButton = itemView.findViewById(R.id.cart_item_decrease_quantity)
+        private val increaseQuantityButton: ImageButton = itemView.findViewById(R.id.cart_item_increase_quantity)
+        private val removeItemButton: ImageButton = itemView.findViewById(R.id.cart_item_remove_button)
+
+        fun bind(cartItem: CartItemDetail) {
+            itemTitle.text = cartItem.product.title
+            itemPrice.text = String.format("€%.2f", cartItem.product.price)
+            itemQuantityText.text = cartItem.quantity.toString()
+
+            Glide.with(itemView.context)
+                .load(cartItem.product.imageUrl)
+                .placeholder(R.drawable.whysoserious)
+                .error(R.drawable.whysoserious)
+                .into(itemImage)
+
+            decreaseQuantityButton.setOnClickListener {
+                if (cartItem.quantity > 1) {
+                    onQuantityChanged(cartItem.product.id, cartItem.quantity - 1)
+                } else {
+                    // Si la quantité est 1 et on diminue, on supprime l'item
+                    onItemRemoved(cartItem.product.id)
+                }
+            }
+
+            increaseQuantityButton.setOnClickListener {
+                // Optionnel: ajouter une limite max si besoin
+                onQuantityChanged(cartItem.product.id, cartItem.quantity + 1)
+            }
+
+            removeItemButton.setOnClickListener {
+                onItemRemoved(cartItem.product.id)
+            }
+        }
+    }
+}

@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
         fetchProducts()
-        fetchCategories() // Pour le menu déroulant
+        fetchCategories()
+        CartManager.fetchCartFromServer(this)
     }
 
     private fun setupRecyclerView() {
@@ -212,8 +213,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                Toast.makeText(this, "Panier cliqué", Toast.LENGTH_SHORT).show()
-                // TODO: Implémenter la navigation/logique du panier
+                // Toast.makeText(this, "Panier cliqué", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, CartActivity::class.java)) // LANCER CARTACTIVITY
                 true
             }
 

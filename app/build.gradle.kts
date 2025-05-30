@@ -68,4 +68,6 @@ dependencies {
     // Coroutines (pour les appels réseau asynchrones)
     implementation(libs.kotlinx.coroutines.core) // Vérifie la dernière version
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
 }

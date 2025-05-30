@@ -1,7 +1,6 @@
 package com.example.projetandroiddorspasteau
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.example.projetandroiddorspasteau.model.Product
+import android.app.AlertDialog
+import android.widget.NumberPicker
 
 // import com.google.android.material.appbar.CollapsingToolbarLayout // Supprimer cet import si présent
 
@@ -32,6 +33,7 @@ class Product_detail : AppCompatActivity() {
     private lateinit var productDetailRatingText: TextView
     private lateinit var productDetailDescription: TextView
     private lateinit var addToCartButton: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +84,29 @@ class Product_detail : AppCompatActivity() {
         productDetailDescription.text = product.description
 
         addToCartButton.setOnClickListener {
-            Toast.makeText(this, "${product.title} ajouté au panier (simulation)", Toast.LENGTH_SHORT).show()
+            showQuantityDialog(product)
         }
+    }
+    private fun showQuantityDialog(product: Product) {
+        val numberPicker = NumberPicker(this).apply {
+            minValue = 1
+            maxValue = 10 // Limite max pour la quantité
+            wrapSelectorWheel = false
+            // Mettre la valeur actuelle si le produit est déjà dans le panier
+            val existingItem = CartManager.getCartItems().find { it.product.id == product.id }
+            value = existingItem?.quantity ?: 1
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Choisir la quantité")
+            .setView(numberPicker)
+            .setPositiveButton("Ajouter") { _, _ ->
+                val quantity = numberPicker.value
+                CartManager.addItem(product, quantity, this)
+                // Le message Toast est maintenant géré par CartManager après la synchro
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
