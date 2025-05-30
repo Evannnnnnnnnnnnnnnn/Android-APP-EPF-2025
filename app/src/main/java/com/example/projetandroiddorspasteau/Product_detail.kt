@@ -97,6 +97,7 @@ class Product_detail : AppCompatActivity() {
             showQuantityDialog(product)
         }
     }
+
     private fun showQuantityDialog(product: Product) {
         // Gonfler le layout personnalisé pour le dialogue
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_quantity, null)
@@ -112,15 +113,18 @@ class Product_detail : AppCompatActivity() {
 
         // Construire le dialogue
         val alertDialog = AlertDialog.Builder(this)
-            // .setTitle("Choisir la quantité") // le titre est dans ton XML
+            // .setTitle("Choisir la quantité") // le titre est dans le XML
             .setView(dialogView)
             .setPositiveButton("Ajouter") { _, _ ->
                 val quantity = numberPicker.value
-                CartManager.addItem(product, quantity, this)
-                showAddedToCartDialog(product.title)
+                if (quantity > 0) {
+                    CartManager.addItem(product, quantity, this)
+                    showAddedToCartDialog(product.title)
+                }
             }
             .setNegativeButton("Annuler", null)
             .create() // Crée le dialogue mais ne l'affiche pas encore
+
 
         alertDialog.show()
 
@@ -129,7 +133,6 @@ class Product_detail : AppCompatActivity() {
         val dialogWidth = (displayMetrics.widthPixels * 0.7).toInt() // 70% de la largeur de l'écran
         window?.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT)
         window?.setGravity(Gravity.CENTER) // Assurer qu'il soit centré
-
     }
 
 
@@ -140,18 +143,18 @@ class Product_detail : AppCompatActivity() {
             .setPositiveButton("Voir le Panier") { _, _ ->
                 // Lancer CartActivity
                 val intent = Intent(this, CartActivity::class.java)
-                // Optionnel : si tu veux que CartActivity se comporte d'une certaine manière
-                // en venant d'ici, tu peux ajouter des extras.
-                // Par exemple, pour éviter de relancer MainActivity si on fait "retour" depuis le panier :
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
-                // Optionnel: fermer Product_detail après être allé au panier
-                // finish()
+                // fermer Product_detail après être allé au panier
+                finish()
             }
             .setNegativeButton("Continuer les achats") { dialog, _ ->
-                dialog.dismiss()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                finish()
             }
-            .setCancelable(false) // Empêche de fermer le dialogue en cliquant à l'extérieur
+            .setCancelable(true) // Empêche de fermer le dialogue en cliquant à l'extérieur à false
             .show()
     }
 

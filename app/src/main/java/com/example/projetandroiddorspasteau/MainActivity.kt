@@ -246,9 +246,9 @@ class MainActivity : AppCompatActivity() {
 
         productAdapter.updateProducts(productsToDisplay)
 
-        if (productsToDisplay.isEmpty()) {
-            Toast.makeText(this, "Aucun produit trouvé pour '$query'", Toast.LENGTH_SHORT).show()
-        }
+//        if (productsToDisplay.isEmpty()) {
+//            Toast.makeText(this, "Aucun produit trouvé pour '$query'", Toast.LENGTH_SHORT).show()
+//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
