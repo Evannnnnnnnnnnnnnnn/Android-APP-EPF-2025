@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button // Peut être remplacé par MaterialButton si tu es spécifique
-import com.google.android.material.button.MaterialButton // Mieux pour les MaterialButton
+import com.google.android.material.button.MaterialButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -20,10 +19,9 @@ class CartActivity : AppCompatActivity() {
     private lateinit var cartAdapter: CartAdapter
     private lateinit var emptyCartLayout: LinearLayout
     private lateinit var cartTotalPriceText: TextView
-    // Références aux deux boutons de validation
     private lateinit var checkoutButtonPrimary: MaterialButton
     private lateinit var checkoutButtonOutlined: MaterialButton
-    private lateinit var clearCartButton: MaterialButton // Garde MaterialButton pour la cohérence
+    private lateinit var clearCartButton: MaterialButton
 
     private val cartUpdateListener: () -> Unit = {
         updateCartUI()
@@ -36,7 +34,7 @@ class CartActivity : AppCompatActivity() {
         toolbarCart = findViewById(R.id.toolbar_cart)
         setSupportActionBar(toolbarCart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Mon Panier" // Tu peux utiliser @string/cart_title
+        supportActionBar?.title = "Mon Panier"
 
         cartRecyclerView = findViewById(R.id.cart_recycler_view)
         emptyCartLayout = findViewById(R.id.empty_cart_layout)
@@ -50,18 +48,14 @@ class CartActivity : AppCompatActivity() {
 
         CartManager.addCartUpdateListener(cartUpdateListener)
 
-        // Le OnClickListener doit être sur le bouton qui est réellement cliquable
-        // Ou tu peux avoir un seul listener et vérifier quel bouton est visible
         val checkoutClickListener = View.OnClickListener {
             if (CartManager.getCartItems().isNotEmpty()) {
                 Toast.makeText(this, "Fonctionnalité de validation non implémentée.", Toast.LENGTH_LONG).show()
             } else {
-                // Ce cas ne devrait pas se produire si le bouton primary est caché quand le panier est vide
                 Toast.makeText(this, "Votre panier est vide.", Toast.LENGTH_SHORT).show()
             }
         }
         checkoutButtonPrimary.setOnClickListener(checkoutClickListener)
-        // Si tu veux que le bouton outlined fasse quelque chose (ex: afficher un Toast "Panier vide")
         // checkoutButtonOutlined.setOnClickListener {
         //     Toast.makeText(this, "Votre panier est vide pour valider.", Toast.LENGTH_SHORT).show()
         // }
@@ -97,8 +91,8 @@ class CartActivity : AppCompatActivity() {
 
             checkoutButtonPrimary.visibility = View.GONE
             checkoutButtonOutlined.visibility = View.VISIBLE
-            checkoutButtonOutlined.isEnabled = false // Optionnel: garder désactivé
-            clearCartButton.isEnabled = false // Désactiver "Vider le panier" si déjà vide
+            checkoutButtonOutlined.isEnabled = false
+            clearCartButton.isEnabled = false
 
         } else {
             cartRecyclerView.visibility = View.VISIBLE
@@ -106,7 +100,7 @@ class CartActivity : AppCompatActivity() {
 
             checkoutButtonPrimary.visibility = View.VISIBLE
             checkoutButtonOutlined.visibility = View.GONE
-            clearCartButton.isEnabled = true // Activer "Vider le panier"
+            clearCartButton.isEnabled = true
         }
         cartTotalPriceText.text = String.format("€%.2f", CartManager.getTotalPrice())
     }

@@ -9,8 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy // Import for cache strategy
-import com.example.projetandroiddorspasteau.WhiteToTransparentTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class CartAdapter(
     private var cartItems: List<CartItemDetail>,
@@ -34,7 +33,7 @@ class CartAdapter(
 
     fun updateCartItems(newCartItems: List<CartItemDetail>) {
         this.cartItems = newCartItems
-        notifyDataSetChanged() // Pour une liste plus grande, utiliser DiffUtil
+        notifyDataSetChanged()
     }
 
     inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -83,7 +82,6 @@ class CartAdapter(
             }
 
             increaseQuantityButton.setOnClickListener {
-                // Optionnel: ajouter une limite max si besoin
                 onQuantityChanged(cartItem.product.id, cartItem.quantity + 1)
             }
 

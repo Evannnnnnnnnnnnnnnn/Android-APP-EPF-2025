@@ -14,7 +14,6 @@ import com.google.zxing.integration.android.IntentResult
 
 class ScanActivity : AppCompatActivity() {
 
-    // ActivityResultLauncher pour gérer le résultat du scan
     private lateinit var barcodeLauncher: ActivityResultLauncher<Intent>
 
     companion object {
@@ -23,13 +22,11 @@ class ScanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Pas besoin de layout XML pour cette activité, elle lance directement le scanner
 
         barcodeLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val intentResult: IntentResult? = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
             if (intentResult != null) {
                 if (intentResult.contents == null) {
-                    //Toast.makeText(this, "Scan annulé", Toast.LENGTH_LONG).show()
                     finish()
                 } else {
                     val returnIntent = Intent()
@@ -38,13 +35,11 @@ class ScanActivity : AppCompatActivity() {
                     finish()
                 }
             } else {
-                // Ceci ne devrait pas arriver avec zxing-android-embedded
                 super.onActivityResult(result.resultCode, result.resultCode, result.data)
                 finish()
             }
         }
 
-        // Lancer le scan dès que l'activité est créée
         startScan()
     }
 
@@ -52,12 +47,11 @@ class ScanActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         val integrator = IntentIntegrator(this)
         @Suppress("DEPRECATION")
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE) // Scanner uniquement les QRCodes
-        integrator.setPrompt("Scannez un QRCode produit") // Message affiché à l'utilisateur        
-        integrator.setCameraId(0)  // Utiliser la caméra arrière
-        integrator.setBarcodeImageEnabled(false) // Ne pas sauvegarder l'image du code-barres
-        integrator.setOrientationLocked(false) // Permettre au scanner de suivre l'orientation de l'écran
-        // Lancer l'activité de scan fournie par la bibliothèque
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt("Scannez un QRCode produit")
+        integrator.setCameraId(0)
+        integrator.setBarcodeImageEnabled(false)
+        integrator.setOrientationLocked(false)
         barcodeLauncher.launch(integrator.createScanIntent())
     }
 }

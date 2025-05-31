@@ -1,6 +1,6 @@
-package com.example.projetandroiddorspasteau // Ton package
+package com.example.projetandroiddorspasteau
 
-import android.Manifest // Pour la demande de permission CAMERA
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,11 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.lifecycleScope // Assure-toi que cet import est bien là
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projetandroiddorspasteau.model.Product // Assure-toi que le chemin est correct
-import kotlinx.coroutines.launch // Assure-toi que cet import est bien là
+import com.example.projetandroiddorspasteau.model.Product
+import kotlinx.coroutines.launch
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_page)  //  Nom du layout principal
+        setContentView(R.layout.activity_home_page)
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -50,14 +50,12 @@ class MainActivity : AppCompatActivity() {
         productsRecyclerView = findViewById(R.id.products_recycler_view)
         progressBar = findViewById(R.id.progress_bar)
 
-        // Initialiser les launchers dans onCreate
         initializeActivityLaunchers()
-        cartFab = findViewById(R.id.fab_cart) // Récupérer la référence du FAB
+        cartFab = findViewById(R.id.fab_cart)
 
         cartFab.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
-        // Charger le panier depuis DataStore AVANT de faire d'autres opérations
         lifecycleScope.launch {
             Log.d("MainActivity", "onCreate: Launching coroutine to load cart and fetch data.")
             CartManager.loadCartFromDataStore(applicationContext)
@@ -71,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeActivityLaunchers() {
-        // Initialiser le launcher pour le résultat du scan
         scanActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val data: Intent? = result.data
@@ -94,7 +91,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Initialiser le launcher pour la demande de permission CAMERA
         requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 Log.d("MainActivity", "Camera permission granted.")
@@ -297,19 +293,17 @@ class MainActivity : AppCompatActivity() {
         popupMenu.show()
     }
 
-    // Nouvelle méthode pour lancer le scanner
     private fun launchScanner() {
         val intent = Intent(this, ScanActivity::class.java)
         scanActivityResultLauncher.launch(intent)
     }
 
-    // Nouvelle méthode pour récupérer et afficher un produit par ID
     private fun fetchAndShowProductById(productId: Int) {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
                 Log.d("MainActivity", "Fetching product details for ID: $productId")
-                val response = RetrofitInstance.api.getProductById(productId) // Assure-toi que cette méthode existe dans ApiService
+                val response = RetrofitInstance.api.getProductById(productId)
                 if (response.isSuccessful) {
                     response.body()?.let { product ->
                         val intent = Intent(this@MainActivity, Product_detail::class.java)

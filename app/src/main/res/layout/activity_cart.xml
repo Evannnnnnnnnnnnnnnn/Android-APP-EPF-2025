@@ -36,7 +36,6 @@
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout_cart"
         tools:listitem="@layout/item_cart_product" />
 
-    <!-- LinearLayout pour l'état du panier vide (remplace l'ancien TextView) -->
     <LinearLayout
         android:id="@+id/empty_cart_layout"
         android:layout_width="wrap_content"
@@ -100,7 +99,6 @@
                 tools:text="€199.98" />
         </LinearLayout>
 
-        <!-- Bouton de validation principal (visible si panier non vide) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/checkout_button_primary"
             style="@style/AppButton.Primary"
@@ -110,7 +108,6 @@
             android:text="Valider la commande"
             android:visibility="gone" />
 
-        <!-- Bouton de validation stylisé "outlined" (visible si panier vide) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/checkout_button_outlined"
             style="@style/AppButton.Outlined"

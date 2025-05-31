@@ -61,9 +61,8 @@ class Product_detail : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(EXTRA_PRODUCT, Product::class.java) // Version pour API >= 33 -> tel Seb (le riche là)
             } else {
-                // Suppress deprecation warning for the older getParcelableExtra method
                 @Suppress("DEPRECATION")
-                intent.getParcelableExtra<Product>(EXTRA_PRODUCT) // Version pour API < 33
+                intent.getParcelableExtra<Product>(EXTRA_PRODUCT) // Version pour API < 33 -> tel Evan :(
             }
 
         if (product != null) {
@@ -76,8 +75,7 @@ class Product_detail : AppCompatActivity() {
 
     @SuppressLint("DefaultLocale")
     private fun displayProductDetails(product: Product) {
-        // collapsingToolbarLayoutDetail.title = product.title // Supprimer cette ligne
-        supportActionBar?.title = product.title // Le titre est maintenant sur la Toolbar standard
+        supportActionBar?.title = product.title
         supportActionBar?.themedContext?.let { themedContext ->
             val upArrow = ContextCompat.getDrawable(themedContext, androidx.appcompat.R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
@@ -104,7 +102,7 @@ class Product_detail : AppCompatActivity() {
             .transform(WhiteToTransparentTransformation(tolerance = tolerance_appliqué))
             .placeholder(R.drawable.whysoserious)
             .error(R.drawable.whysoserious)
-            .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
+            .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache
             .into(productDetailImage)
 
         productDetailTitle.text = product.title
@@ -120,10 +118,8 @@ class Product_detail : AppCompatActivity() {
     }
 
     private fun showQuantityDialog(product: Product) {
-        // Gonfler le layout personnalisé pour le dialogue
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_quantity, null)
         val numberPicker: NumberPicker = dialogView.findViewById(R.id.custom_dialog_number_picker)
-        // val dialogTitleTextView: TextView = dialogView.findViewById(R.id.dialog_title_custom) // Si tu gères le titre via XML
 
         // Configuration du NumberPicker
         numberPicker.minValue = 0
@@ -153,7 +149,7 @@ class Product_detail : AppCompatActivity() {
         val displayMetrics = resources.displayMetrics
         val dialogWidth = (displayMetrics.widthPixels * 0.7).toInt() // 70% de la largeur de l'écran
         window?.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT)
-        window?.setGravity(Gravity.CENTER) // Assurer qu'il soit centré
+        window?.setGravity(Gravity.CENTER)
     }
 
 

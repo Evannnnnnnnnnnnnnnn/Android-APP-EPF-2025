@@ -35,7 +35,7 @@ class ProductAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateProducts(newProducts: List<Product>) {
         products = newProducts
-        notifyDataSetChanged() // Simple, mais pour de grandes listes, utiliser DiffUtil
+        notifyDataSetChanged() // Pour de grandes listes, utiliser DiffUtil
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,9 +64,9 @@ class ProductAdapter(
             Glide.with(itemView.context)
                 .load(product.imageUrl)
                 .transform(WhiteToTransparentTransformation(tolerance = tolerance_appliqué))
-                .placeholder(R.drawable.whysoserious) // Optionnel: une image de placeholder
-                .error(R.drawable.whysoserious) // Optionnel: une image en cas d'erreur
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
+                .placeholder(R.drawable.whysoserious) //  placeholder
+                .error(R.drawable.whysoserious) // en cas d'erreur
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // cache both original and transformed
                 .into(productImage)
         }
     }

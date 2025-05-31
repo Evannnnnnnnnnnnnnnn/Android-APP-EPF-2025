@@ -1,4 +1,4 @@
-package com.example.projetandroiddorspasteau // Ton package
+package com.example.projetandroiddorspasteau
 
 import com.example.projetandroiddorspasteau.model.ApiCart
 import com.example.projetandroiddorspasteau.model.Product
@@ -13,18 +13,17 @@ interface ApiService {
     @GET("products/categories")
     suspend fun getCategories(): Response<List<String>>
 
-    // --- Cart Endpoints ---
     @GET("carts/user/{userId}")
     suspend fun getUserCarts(@Path("userId") userId: Int): Response<List<ApiCart>>
 
     @POST("carts")
-    suspend fun createCart(@Body cart: ApiCart): Response<ApiCart> // L'API retourne le panier créé avec son ID
+    suspend fun createCart(@Body cart: ApiCart): Response<ApiCart>
 
     @PUT("carts/{cartId}")
     suspend fun updateCart(@Path("cartId") cartId: Int, @Body cart: ApiCart): Response<ApiCart>
 
     @DELETE("carts/{cartId}")
-    suspend fun deleteCart(@Path("cartId") cartId: Int): Response<Void> // Ou Response<ApiCart> si l'API le retourne
+    suspend fun deleteCart(@Path("cartId") cartId: Int): Response<Void>
 
     @GET("products/{id}")
     suspend fun getProductById(@Path("id") productId: Int): Response<Product>

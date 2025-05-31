@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ApiCart(
     @SerializedName("id")
-    val id: Int? = null, // Peut être null lors de la création
+    val id: Int? = null,
     @SerializedName("userId")
     val userId: Int,
     @SerializedName("date")

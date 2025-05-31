@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- La Toolbar est maintenant directement enfant de AppBarLayout -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_detail"
             style="@style/AppToolbar"
@@ -34,7 +33,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- L'ImageView est maintenant le premier élément dans le contenu scrollable -->
             <ImageView
                 android:id="@+id/product_detail_image"
                 android:layout_width="0dp"

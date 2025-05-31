@@ -1,4 +1,4 @@
-package com.example.projetandroiddorspasteau // Ton package
+package com.example.projetandroiddorspasteau
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -17,7 +17,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
@@ -45,7 +44,6 @@ object CartManager {
     private val CART_ITEMS_KEY = stringPreferencesKey("cart_items_json")
     private val gson = Gson()
 
-    // --- Listener Management (inchangé) ---
     fun addCartUpdateListener(listener: () -> Unit) {
         cartUpdateListeners.add(listener)
     }
@@ -53,12 +51,12 @@ object CartManager {
         cartUpdateListeners.remove(listener)
     }
     private fun notifyCartUpdated() {
-        CoroutineScope(Dispatchers.Main).launch { // Assurer que les listeners UI sont appelés sur le Main thread
+        CoroutineScope(Dispatchers.Main).launch {
             cartUpdateListeners.forEach { it.invoke() }
         }
     }
 
-    // --- Getters (inchangé) ---
+
     fun getCartItems(): List<CartItemDetail> {
         return localCartItems.values.toList().sortedBy { it.product.title }
     }
@@ -69,7 +67,6 @@ object CartManager {
         return localCartItems.values.sumOf { it.quantity }
     }
 
-    // --- Méthodes de modification du panier ---
     fun addItem(product: Product, quantity: Int, context: Context) {
         if (quantity <= 0) return
 
@@ -80,7 +77,7 @@ object CartManager {
             localCartItems[product.id] = CartItemDetail(product, quantity)
         }
         Log.d(TAG, "Added to local cart: ${product.title}, qty: $quantity. New total: ${localCartItems[product.id]?.quantity}")
-        saveCartToDataStore(context) // SAUVEGARDER
+        saveCartToDataStore(context)
         notifyCartUpdated()
         syncCartWithServer(context, "Produit ajouté au panier !")
     }
@@ -93,7 +90,7 @@ object CartManager {
         localCartItems[productId]?.let {
             it.quantity = newQuantity
             Log.d(TAG, "Updated quantity for ${it.product.title} to $newQuantity")
-            saveCartToDataStore(context) // SAUVEGARDER
+            saveCartToDataStore(context)
             notifyCartUpdated()
             syncCartWithServer(context, "Quantité mise à jour.")
         }
@@ -103,7 +100,7 @@ object CartManager {
         val removedItem = localCartItems.remove(productId)
         if (removedItem != null) {
             Log.d(TAG, "Removed from local cart: ${removedItem.product.title}")
-            saveCartToDataStore(context) // SAUVEGARDER
+            saveCartToDataStore(context)
             notifyCartUpdated()
             syncCartWithServer(context, "${removedItem.product.title} retiré du panier.")
         }
@@ -112,7 +109,7 @@ object CartManager {
     fun clearCart(context: Context) {
         localCartItems.clear()
         Log.d(TAG, "Local cart cleared.")
-        saveCartToDataStore(context) // SAUVEGARDER
+        saveCartToDataStore(context)
         notifyCartUpdated()
         if (serverCartId != null) {
             deleteCartFromServer(context, "Panier vidé.")
@@ -126,7 +123,6 @@ object CartManager {
         return sdf.format(Date())
     }
 
-    // --- DataStore Persistence ---
     private fun saveCartToDataStore(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -142,9 +138,9 @@ object CartManager {
         }
     }
 
-    suspend fun loadCartFromDataStore(context: Context) { // public pour être appelé au démarrage
+    suspend fun loadCartFromDataStore(context: Context) {
         try {
-            val preferences = context.dataStore.data.first() // Lire une seule fois
+            val preferences = context.dataStore.data.first()
             val jsonCart = preferences[CART_ITEMS_KEY]
             if (!jsonCart.isNullOrEmpty()) {
                 val type = object : TypeToken<List<CartItemDetail>>() {}.type
@@ -157,14 +153,10 @@ object CartManager {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error loading cart from DataStore", e)
-            // Ne pas planter l'app, continuer avec un panier vide
         }
-        // Notifier l'UI après le chargement, même si c'est vide, pour un état initial correct
         notifyCartUpdated()
     }
 
-
-    // --- API Synchronization (majoritairement inchangé, mais les appels sont après la sauvegarde locale) ---
     fun fetchCartFromServer(context: Context, onFinished: ((Boolean) -> Unit)? = null) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -177,9 +169,6 @@ object CartManager {
                             val serverCart = carts.first()
                             serverCartId = serverCart.id
                             Log.d(TAG, "Fetched cart ID: $serverCartId from server.")
-                            // Idéalement, ici on fusionnerait le panier serveur avec le panier local (DataStore).
-                            // Pour l'instant, on garde le local comme prioritaire et on synchronisera
-                            // l'état local vers le serveur.
                             //Toast.makeText(context, "Panier serveur (ID: $serverCartId) info récupérée.", Toast.LENGTH_SHORT).show()
                         } else {
                             serverCartId = null
@@ -188,14 +177,14 @@ object CartManager {
                         onFinished?.invoke(true)
                     } else {
                         Log.e(TAG, "Error fetching cart: ${response.code()} - ${response.message()}")
-                        // Toast.makeText(context, "Erreur de chargement du panier serveur.", Toast.LENGTH_SHORT).show() // Peut être bruyant
+                        // Toast.makeText(context, "Erreur de chargement du panier serveur.", Toast.LENGTH_SHORT).show()
                         onFinished?.invoke(false)
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Exception fetching cart", e)
                 withContext(Dispatchers.Main) {
-                    // Toast.makeText(context, "Erreur réseau (panier): ${e.message}", Toast.LENGTH_SHORT).show() // Peut être bruyant
+                    // Toast.makeText(context, "Erreur réseau (panier): ${e.message}", Toast.LENGTH_SHORT).show()
                     onFinished?.invoke(false)
                 }
             }
@@ -250,7 +239,6 @@ object CartManager {
         }
     }
 
-    private fun deleteCartFromServer(context: Context, successMessage: String) {
-        // ... (code inchangé) ...
+    private fun deleteCartFromServer(context: Context, successMessage: String) {// Pour Main
     }
 }
