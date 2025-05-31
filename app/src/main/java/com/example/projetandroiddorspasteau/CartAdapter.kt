@@ -51,9 +51,23 @@ class CartAdapter(
             itemPrice.text = String.format("€%.2f", cartItem.product.price)
             itemQuantityText.text = cartItem.quantity.toString()
 
+            var tolerance_appliqué = 30
+            if (cartItem.product.id == 1 || cartItem.product.id == 9 || cartItem.product.id == 10 || cartItem.product.id == 11 || cartItem.product.id == 12 || cartItem.product.id == 15 || cartItem.product.id == 16) {
+                tolerance_appliqué = 150
+            }
+            if (cartItem.product.id == 2 || cartItem.product.id == 8 || cartItem.product.id == 20) {
+                tolerance_appliqué = 20
+            }
+            if (cartItem.product.id == 4 || cartItem.product.id == 17) {
+                tolerance_appliqué = 100
+            }
+            if (cartItem.product.id == 18) {
+                tolerance_appliqué = 1
+            }
+
             Glide.with(itemView.context)
                 .load(cartItem.product.imageUrl)
-                .transform(WhiteToTransparentTransformation(tolerance = 15))
+                .transform(WhiteToTransparentTransformation(tolerance = tolerance_appliqué))
                 .placeholder(R.drawable.whysoserious)
                 .error(R.drawable.whysoserious)
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed

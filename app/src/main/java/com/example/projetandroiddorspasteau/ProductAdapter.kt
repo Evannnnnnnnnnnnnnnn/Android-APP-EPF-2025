@@ -47,9 +47,23 @@ class ProductAdapter(
             productTitle.text = product.title
             productPrice.text = String.format("€%.2f", product.price) // Formatage du prix
 
+            var tolerance_appliqué = 30
+            if (product.id == 1 || product.id == 9 || product.id == 10 || product.id == 11 || product.id == 12 || product.id == 15 || product.id == 16) {
+                tolerance_appliqué = 150
+            }
+            if (product.id == 2 || product.id == 8 || product.id == 20) {
+                tolerance_appliqué = 20
+            }
+            if (product.id == 4 || product.id == 17) {
+                tolerance_appliqué = 100
+            }
+            if (product.id == 18) {
+                tolerance_appliqué = 1
+            }
+
             Glide.with(itemView.context)
                 .load(product.imageUrl)
-                .transform(WhiteToTransparentTransformation(tolerance = 20))
+                .transform(WhiteToTransparentTransformation(tolerance = tolerance_appliqué))
                 .placeholder(R.drawable.whysoserious) // Optionnel: une image de placeholder
                 .error(R.drawable.whysoserious) // Optionnel: une image en cas d'erreur
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache both original and transformed
