@@ -8,7 +8,7 @@
     <color name="app_button_background">#5E5C70</color> <!-- Boutons un peu plus clairs que 4A4859 en mode clair -->
     <color name="app_button_text">#FFFFFF</color> <!-- Texte blanc sur ces boutons -->
     <color name="app_icon_color">#D1D1D1</color> <!-- Icônes claires -->
-    <color name="app_toolbar_background">#1E1E1E</color> <!-- Toolbar un peu moins sombre que le fond -->
+    <color name="app_toolbar_background">#121212</color> <!-- Toolbar un peu moins sombre que le fond -->
     <color name="app_toolbar_content_color">#E1E1E1</color> <!-- Icônes et titre toolbar clairs -->
 
     <!-- Couleurs sémantiques Material 3 (Mode Nuit) -->

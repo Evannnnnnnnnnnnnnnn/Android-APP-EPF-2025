@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Palette personnalisée (Mode Clair) -->
     <color name="app_text_primary">#000000</color> <!-- Noir pour les titres de produits -->
     <color name="app_text_secondary">#4A4859</color> <!-- Gris ardoise pour textes, prix, icônes -->
     <color name="app_background">#f8f8f8</color> <!-- Fond blanc cassé -->
@@ -17,7 +16,7 @@
     <color name="md_theme_light_primaryContainer">#E0E1E8</color> <!-- Variante de app_button_background -->
     <color name="md_theme_light_onPrimaryContainer">#0A081A</color>
 
-    <color name="md_theme_light_secondary">#5E5C71</color> <!-- Un gris neutre -->
+    <color name="md_theme_light_secondary">#FF5C71</color> <!-- Un gris neutre -->
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
     <color name="md_theme_light_secondaryContainer">#E3E0F9</color>
     <color name="md_theme_light_onSecondaryContainer">#1B1A2C</color>
