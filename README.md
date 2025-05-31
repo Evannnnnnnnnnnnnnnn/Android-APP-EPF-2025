@@ -129,7 +129,7 @@ L'application supporte intégralement le **mode clair et le mode sombre (nuit)**
 
 *   **Palette de couleurs personnalisée :** Utilisation des couleurs `#f8f8f8` (fond), `#4A4859` (texte/icônes/boutons) pour un look moderne et minimaliste.
 *   **Styles cohérents :** Application de styles pour les boutons, la Toolbar, et les cartes de produits pour une apparence unifiée.
-*   **Intégration des images produits :** Les images des produits fournies par l'API, qui ont souvent des fonds unis (blancs), sont affichées avec `scaleType="centerInside"`. Sur le fond clair de l'application, cela donne un effet visuel où les produits semblent détourés, s'intégrant de manière plus harmonieuse et professionnelle.
+*   **Intégration des images produits :** Les images des produits fournies par l'API ont des fonds unis (blancs). Sur le fond sombre de l'application, les images sont détourré automatiquement, s'intégrant de manière plus harmonieuse et professionnelle.
 *   **Icônes Material Design :** Utilisation d'icônes vectorielles standards et personnalisées.
 *   **Transitions et retours visuels :** Indicateurs de chargement, toasts pour les actions, et mises à jour dynamiques de l'interface.
 
