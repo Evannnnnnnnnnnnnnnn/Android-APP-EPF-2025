@@ -19,6 +19,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.NumberPicker
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class Product_detail : AppCompatActivity() {
@@ -45,7 +47,6 @@ class Product_detail : AppCompatActivity() {
         toolbarDetail = findViewById(R.id.toolbar_detail)
         setSupportActionBar(toolbarDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        // supportActionBar?.title = "" // On peut laisser ou mettre le titre par défaut si besoin
 
         productDetailImage = findViewById(R.id.product_detail_image)
         productDetailTitle = findViewById(R.id.product_detail_title)
@@ -77,7 +78,13 @@ class Product_detail : AppCompatActivity() {
     private fun displayProductDetails(product: Product) {
         // collapsingToolbarLayoutDetail.title = product.title // Supprimer cette ligne
         supportActionBar?.title = product.title // Le titre est maintenant sur la Toolbar standard
-
+        supportActionBar?.themedContext?.let { themedContext ->
+            val upArrow = ContextCompat.getDrawable(themedContext, androidx.appcompat.R.drawable.abc_ic_ab_back_material)
+            upArrow?.let {
+                DrawableCompat.setTint(it, ContextCompat.getColor(themedContext, R.color.app_toolbar_content_color))
+                supportActionBar?.setHomeAsUpIndicator(it)
+            }
+        }
         Glide.with(this)
             .load(product.imageUrl)
             .transform(WhiteToTransparentTransformation(tolerance = 15))

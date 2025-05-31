@@ -1,5 +1,4 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,16 +8,16 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
+        style="@style/AppToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/AppToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:popupTheme="@style/AppToolbar.Popup"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <TextView
@@ -26,9 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PasteauDors"
-                android:textColor="?attr/colorOnPrimary"
+                android:textColor="@color/app_toolbar_content_color"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,31 +37,31 @@
         android:layout_height="match_parent"
         android:padding="4dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:spanCount="2"
         tools:listitem="@layout/item_product"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_scrollFlags="scroll|enterAlways|snap"/>
 
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_gravity="center" />
+        tools:visibility="visible" />
 
 
-    <!-- Floating Action Button pour le panier -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="Voir le panier"
         android:src="@drawable/ic_shopping_cart"
-        app:tint="@color/white"
-    app:backgroundTint="?attr/colorPrimary"
-    app:shapeAppearanceOverlay="@style/FabShapeSquare"
-    android:contentDescription="Voir le panier"/>
+        app:backgroundTint="@color/app_button_background"
+        app:shapeAppearanceOverlay="@style/FabShapeSquare"
+        app:tint="@color/app_button_text" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

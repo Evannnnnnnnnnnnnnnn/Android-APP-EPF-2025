@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Palette personnalisée (Mode Nuit) -->
+    <color name="app_text_primary">#F0F0F0</color> <!-- Titres produits clairs -->
+    <color name="app_text_secondary">#D1D1D1</color> <!-- Autres textes clairs -->
+    <color name="app_background">#121212</color> <!-- Fond très sombre -->
+    <color name="app_lines">#3A3A3A</color> <!-- Lignes/bordures gris foncé -->
+    <color name="app_button_background">#5E5C70</color> <!-- Boutons un peu plus clairs que 4A4859 en mode clair -->
+    <color name="app_button_text">#FFFFFF</color> <!-- Texte blanc sur ces boutons -->
+    <color name="app_icon_color">#D1D1D1</color> <!-- Icônes claires -->
+    <color name="app_toolbar_background">#1E1E1E</color> <!-- Toolbar un peu moins sombre que le fond -->
+    <color name="app_toolbar_content_color">#E1E1E1</color> <!-- Icônes et titre toolbar clairs -->
+
+    <!-- Couleurs sémantiques Material 3 (Mode Nuit) -->
+    <color name="md_theme_dark_primary">@color/app_button_background</color>
+    <color name="md_theme_dark_onPrimary">@color/app_button_text</color>
+    <color name="md_theme_dark_primaryContainer">#32313F</color>
+    <color name="md_theme_dark_onPrimaryContainer">#E0E1E8</color>
+
+    <color name="md_theme_dark_secondary">#C6C4DD</color>
+    <color name="md_theme_dark_onSecondary">#2F2D42</color>
+    <color name="md_theme_dark_secondaryContainer">#464459</color>
+    <color name="md_theme_dark_onSecondaryContainer">#E3E0F9</color>
+
+    <color name="md_theme_dark_tertiary">#EBB8D0</color>
+    <color name="md_theme_dark_onTertiary">#47273A</color>
+    <color name="md_theme_dark_tertiaryContainer">#603D51</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFD8E6</color>
+
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
+
+    <color name="md_theme_dark_background">@color/app_background</color>
+    <color name="md_theme_dark_onBackground">@color/app_text_secondary</color>
+    <color name="md_theme_dark_surface">@color/app_toolbar_background</color> <!-- Surfaces un peu plus claires -->
+    <color name="md_theme_dark_onSurface">@color/app_text_secondary</color>
+    <color name="md_theme_dark_surfaceVariant">#313033</color> <!-- Gris pour variantes de surface -->
+    <color name="md_theme_dark_onSurfaceVariant">#C8C6D0</color>
+    <color name="md_theme_dark_outline">@color/app_lines</color>
+    <color name="md_theme_dark_inverseOnSurface">#1B1B1E</color>
+    <color name="md_theme_dark_inverseSurface">#E4E2E6</color>
+    <color name="md_theme_dark_inversePrimary">#55537A</color>
+    <color name="md_theme_dark_shadow">#000000</color>
+    <color name="md_theme_dark_surfaceTint">@color/md_theme_dark_primary</color>
+    <color name="md_theme_dark_outlineVariant">#48464D</color>
+    <color name="md_theme_dark_scrim">#000000</color>
+
+
+    <!-- Couleurs de base pour compatibilité (Mode Nuit) -->
+    <color name="colorPrimary">@color/md_theme_dark_primary</color>
+    <color name="colorPrimaryDark">#0E0E0E</color> <!-- Encore plus sombre pour la status bar si toolbar sombre -->
+    <color name="colorPrimaryVariant">@color/md_theme_dark_primaryContainer</color>
+    <color name="colorOnPrimary">@color/md_theme_dark_onPrimary</color>
+    <color name="colorSecondary">@color/md_theme_dark_secondary</color>
+    <color name="colorOnSecondary">@color/md_theme_dark_onSecondary</color>
+    <color name="colorBackground">@color/md_theme_dark_background</color>
+    <color name="colorOnBackground">@color/md_theme_dark_onBackground</color>
+    <color name="colorSurface">@color/md_theme_dark_surface</color>
+    <color name="colorOnSurface">@color/md_theme_dark_onSurface</color>
+    <color name="colorError">@color/md_theme_dark_error</color>
+    <color name="colorOnError">@color/md_theme_dark_onError</color>
+</resources>

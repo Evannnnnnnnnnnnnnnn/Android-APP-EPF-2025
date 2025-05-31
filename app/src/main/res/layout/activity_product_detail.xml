@@ -16,10 +16,11 @@
         <!-- La Toolbar est maintenant directement enfant de AppBarLayout -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_detail"
+            style="@style/AppToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        <!-- Le titre sera défini dynamiquement en Kotlin -->
+            app:popupTheme="@style/AppToolbar.Popup"
+            app:titleTextColor="@color/app_toolbar_content_color" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -12,6 +12,7 @@
         android:id="@+id/action_qrcode"
         android:icon="@drawable/ic_qr_code_scanner"
         android:title="Scanner QRCode"
+        android:tint="?attr/colorControlNormal"
         app:showAsAction="always" />
 
     <item

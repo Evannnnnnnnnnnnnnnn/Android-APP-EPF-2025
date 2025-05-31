@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".CartActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout_cart"
+        style="@style/AppToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_cart"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:popupTheme="@style/AppToolbar.Popup"
             app:title="Mon Panier" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -32,25 +30,25 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout_cart"
         app:layout_constraintBottom_toTopOf="@id/cart_summary_layout"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_cart_product"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout_cart"
+        tools:listitem="@layout/item_cart_product" />
 
     <!-- LinearLayout pour l'état du panier vide (remplace l'ancien TextView) -->
     <LinearLayout
         android:id="@+id/empty_cart_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:visibility="gone"
-    app:layout_constraintTop_toBottomOf="@id/app_bar_layout_cart"
-    app:layout_constraintBottom_toTopOf="@id/cart_summary_layout"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    tools:visibility="visible">
+        app:layout_constraintBottom_toTopOf="@id/cart_summary_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout_cart"
+        tools:visibility="visible">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/empty_cart_image"
@@ -61,59 +59,77 @@
             android:scaleType="fitCenter"
             android:src="@drawable/dog_crying" />
 
-    <TextView
-        android:id="@+id/empty_cart_text_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Votre panier est vide."
-    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/empty_cart_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Votre panier est vide."
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+    </LinearLayout>
 
-<LinearLayout
-android:id="@+id/cart_summary_layout"
-android:layout_width="0dp"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:padding="16dp"
-android:background="?attr/colorSurface"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <TextView
+    <LinearLayout
+        android:id="@+id/cart_summary_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Total:"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textStyle="bold"/>
-    <TextView
-        android:id="@+id/cart_total_price_text"
-        android:layout_width="wrap_content"
+        android:background="?attr/colorSurface"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total:"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_total_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                tools:text="€199.98" />
+        </LinearLayout>
+
+        <!-- Bouton de validation principal (visible si panier non vide) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/checkout_button_primary"
+            style="@style/AppButton.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Valider la commande"
+            android:visibility="gone" />
+
+        <!-- Bouton de validation stylisé "outlined" (visible si panier vide) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/checkout_button_outlined"
+            style="@style/AppButton.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            android:text="Valider la commande"
+        android:visibility="visible" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clear_cart_button"
+            style="@style/AppButton.Primary"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textStyle="bold"
-        tools:text="€199.98"/>
-</LinearLayout>
+        android:layout_marginTop="8dp"
+        android:text="Vider le panier" />
 
-<com.google.android.material.button.MaterialButton
-    android:id="@+id/checkout_button"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:text="Valider la commande" />
-<com.google.android.material.button.MaterialButton
-    android:id="@+id/clear_cart_button"
-    style="?attr/materialButtonOutlinedStyle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:text="Vider le panier" />
+    </LinearLayout>
 
-</LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
